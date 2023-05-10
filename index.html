@@ -7,8 +7,135 @@
     <title>My project</title>
 </head>
 <body>
-    Курсов проект по Обектно Ориентирано Програмиране
-№ 2305
+Задание: Проектирайте и реализирайте приложение, което служи като система за управление на банкови сметки – дава възможност за прилагане на различни банкови операции и отпечатва резултат след въвеждане на информация.
+Описание на използваните модули - класове и методи (прототип, входно изходни параметри и предназначение) с кратък коментар:
+1.	Клас "Account":
+•	Прототип: public class Account
+•	Полета:
+•	accountNumber (int): Номер на сметката
+•	accountHolderName (String): Име на притежателя на сметката
+•	balance (double): Баланс на сметката
+•	Методи:
+•	getAccountNumber(): Връща номера на сметката
+•	getAccountHolderName(): Връща името на притежателя на сметката
+•	getBalance(): Връща баланса на сметката
+•	deposit(double amount): Внася сума в сметката
+•	withdraw(double amount): Тегли сума от сметката
+•	Предназначение: Класът "Account" представлява общия модел на банкова сметка и предоставя основни операции като внасяне и теглене на суми.
+2.	Клас "CheckingAccount" (разширява "Account"):
+•	Прототип: public class CheckingAccount extends Account
+•	Допълнителни полета и методи: Няма нови полета и методи, използва и наследява тези от "Account".
+•	Предназначение: Класът "CheckingAccount" представлява разплащателна сметка, която е разширение на базовия клас "Account". Той добавя възможността за изтегляне на суми с допълнителни проверки.
+3.	Клас "TestBank":
+•	Прототип: public class TestBank
+•	Метод "main(String[] args)":
+•	Входни параметри: Стандартният масив с аргументи на командния ред (не се използва в този случай)
+•	Предназначение: Този метод е входната точка на програмата и съдържа логиката за създаване на обекти от класовете "Account" и "CheckingAccount", въвеждане на данни за сметките от потребителя, извеждане на информация за сметките и извършване на операции като внасяне и теглене на суми.
+
+
+
+Общо описание за функциониране на тестовия клас (входно/изходни операции):
+
+
+Тестовият клас "TestBank" служи за демонстриране на функционалността на системата за управление на банкови сметки. Ето общо описание на входно-изходните операции в тестовия клас:
+1.	Входни операции:
+•	Потребителят въвежда данни за две сметки за притежатели (нормална сметка и разплащателна сметка) за всеки притежател. За всяка сметка се въвеждат следните данни:
+•	Номер на сметката (accountNumber)
+•	Име на притежателя на сметката (accountHolderName)
+•	Баланс на сметката (balance)
+2.	Изходни операции:
+•	Информация за наличните суми по сметките се извежда на екрана. За всяка сметка се отпечатват следните данни:
+•	Номер на сметката (accountNumber)
+•	Име на притежателя (accountHolderName)
+•	Баланс (balance)
+•	Сума от 350 лв. се изтегля от разплащателната сметка на всеки притежател.
+•	Сума от 350 лв. се внася в нормалната сметка на всеки притежател.
+•	Информацията след внасянето на изтеглените суми се извежда на екрана. За всяка сметка се отпечатват следните данни:
+•	Номер на сметката (accountNumber)
+•	Име на притежателя (accountHolderName)
+•	Баланс (balance)
+Тестовият клас има за цел да демонстрира функционалността на създадените обекти от класовете "Account" и "CheckingAccount" чрез въвеждане на данни от потребителя и извеждане на информация за сметките преди и след операциите по внасяне и теглене на суми.
+
+
+
+
+
+
+
+
+
+
+Листинг на source (изходния) код на програмата:
+•	Клас Account
+public class Account {
+    private int accountNumber;
+    private String accountHolderName;
+    private double balance;
+
+    public Account(int accountNumber, String accountHolderName, double balance) {
+        this.accountNumber = accountNumber;
+        this.accountHolderName = accountHolderName;
+        this.balance = balance;
+    }
+
+    public void withdraw(double amount) {
+        if (amount > 0 && amount <= balance) {
+            balance -= amount;
+        } else {
+            System.out.println("Невалидна сума за теглене.");
+        }
+    }
+    
+    public void deposit(double amount) {
+        if (amount > 0) {
+            balance += amount;
+        } else {
+            System.out.println("Невалидна сума за внасяне.");
+        }
+    }
+
+    public int getAccountNumber() {
+        return accountNumber;
+    }
+
+    public String getAccountHolderName() {
+        return accountHolderName;
+    }
+
+    public double getBalance() {
+        return balance;
+    }
+}
+
+
+
+
+
+•	Клас CheckingAccount
+class CheckingAccount extends Account {
+    private int transactionCount;
+
+    public CheckingAccount(int accountNumber, String accountHolderName, double balance) {
+        super(accountNumber, accountHolderName, balance);
+        transactionCount = 0;
+    }
+
+    @Override
+    public void withdraw(double amount) {
+        if (transactionCount < 3) {
+            super.withdraw(amount);
+            transactionCount++;
+        } else {
+            System.out.println("Превишили сте максималния брой тегления за разплащателната сметка.");
+        }
+    }
+
+    @Override
+    public void deposit(double amount) {
+        super.deposit(amount);
+        transactionCount++;
+    }
+}
 
 
 
@@ -22,11 +149,79 @@
 
 
 
+•	Тестов Клас TestBank
+import java.util.ArrayList;
+import java.util.Scanner;
 
-Изготвил: Кристофър Петров       Преподавател: В.Ганчева
-ФИТ КПТМ 
-251220032 
-19 гр                                                  
+public class TestBank {
+    public static void main(String[] args) {
+        ArrayList<Account> accounts = new ArrayList<>();
+        Scanner scanner = new Scanner(System.in);
+
+        try {
+            // Въвеждане на данни за две сметки на притежатели
+            for (int i = 0; i < 2; i++) {
+                System.out.println("Въведете данни за сметките на притежател " + (i + 1) + ":");
+
+                System.out.println("//Нормална сметка//");
+                System.out.print("Номер на сметката: ");
+                int accountNumber1 = scanner.nextInt();
+                scanner.nextLine();
+                System.out.print("Име на притежателя на сметката: ");
+                String accountHolderName1 = scanner.nextLine();
+                System.out.print("Баланс на сметката: ");
+                double balance1 = scanner.nextDouble();
+                accounts.add(new Account(accountNumber1, accountHolderName1, balance1));
+                
+                System.out.println("//Разплащателна сметка//");
+                System.out.print("Номер на сметката: ");
+                int accountNumber2 = scanner.nextInt();
+                scanner.nextLine();
+                System.out.print("Име на притежателя на сметката: ");
+                String accountHolderName2 = scanner.nextLine();
+                System.out.print("Баланс на сметката: ");
+                double balance2 = scanner.nextDouble();
+                accounts.add(new CheckingAccount(accountNumber2, accountHolderName2, balance2));
+            }
+        } catch (Exception e) {
+            System.out.println("Грешка при въвеждане на данните. Моля, опитайте отново.");
+        }
+        // Отпечатване на информация за наличните суми по сметките
+        System.out.println("Информация за наличните суми по сметките:");
+        for (Account account : accounts) {
+            System.out.println("Номер на сметката: " + account.getAccountNumber());
+            System.out.println("Име на притежателя: " + account.getAccountHolderName());
+            System.out.println("Баланс: " + account.getBalance());
+            System.out.println();
+        }
+        // Изтегляне на сума от по 350 лв. от разплащателните сметки на всеки притежател
+     
+   for (Account account : accounts) {
+            if (account instanceof CheckingAccount) {
+                CheckingAccount checkingAccount = (CheckingAccount) account;
+                checkingAccount.withdraw(350);
+                
+                // Добавяне на сума от по 350 лв. в нормалните сметки на всеки притежател
+                for (Account acc : accounts) {
+                    if (!(acc instanceof CheckingAccount) && acc.getAccountHolderName().equals(checkingAccount.getAccountHolderName())) {
+                        acc.deposit(350);
+                        break;
+                    }
+                }
+            }
+        }
+        
+                // Отпечатване на информацията след внасянето на сумите
+                System.out.println("Информация след внасяне на изтеглените суми:");
+                for (Account account : accounts) {
+                    System.out.println("Номер на сметката: " + account.getAccountNumber());
+                    System.out.println("Име на притежателя: " + account.getAccountHolderName());
+                    System.out.println("Баланс: " + account.getBalance());
+                    System.out.println();
+                }
+            }
+        }        
+                                             
 
 </body>
 </html>
